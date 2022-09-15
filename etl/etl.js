@@ -1,5 +1,3 @@
-// \COPY oldphotos FROM '/Users/danielshin/Desktop/Hack Reactor/SDC/ReviewsAPI/etl' DELIMITER ',' CSV HEADER;
-
 const fs = require("fs");
 const Pool = require("pg").Pool;
 const fastcsv = require("fast-csv");
