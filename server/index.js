@@ -1,6 +1,7 @@
 const express = require('express');
+const client = require('../db/index.js');
 require('dotenv').config();
 const app = express();
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on Port ${port}`))
+app.listen(port, () => console.log(`Listening on Port ${port}`));
