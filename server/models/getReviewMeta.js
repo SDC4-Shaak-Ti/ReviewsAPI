@@ -2,6 +2,9 @@ const pool = require('../db');
 
 module.exports = (id, callback) => {
   pool.connect((err, client, release) => {
+    if (err) {
+      return console.error('Error acquiring client', err.stack)
+    }
     var data = {
       product_id: id,
       ratings: {},
@@ -11,10 +14,8 @@ module.exports = (id, callback) => {
       },
       characteristics: {}
     }
-    if (err) {
-      return console.error('Error acquiring client', err.stack)
-    }
-    client.query(`SELECT rating, recommend FROM reviews WHERE product_id = ${id}`)
+    var query = `SELECT rating, recommend FROM reviews WHERE product_id = ${id}`
+    client.query(query)
       .then(result => {
         result.rows.forEach(row => {
           var rating = row.rating;
@@ -35,8 +36,7 @@ module.exports = (id, callback) => {
         client.query(`SELECT * FROM characteristics WHERE product_id = ${id}`)
         .then(result => {
           release();
-            console.log(result.rows);
-            console.log('data: ', data)
+          callback(data);
           })
       })
       .catch(err => {
