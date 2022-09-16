@@ -1,9 +1,9 @@
 const pool = require('../db');
 
 module.exports = (id, page, count, sort, callback) => {
-  if (sort === 'newest') sort = 'order by date';
-  if (sort === 'helpful') sort = 'order by helpfulness';
-  if (sort === 'relevant') sort = 'order by helpfulness, date';
+  if (sort === 'newest') sort = 'date DESC';
+  if (sort === 'helpful') sort = 'helpfulness DESC';
+  if (sort === 'relevant') sort = 'date DESC, helpfulness DESC';
 
   pool.connect((err, client, release) => {
     var data = {
@@ -12,7 +12,18 @@ module.exports = (id, page, count, sort, callback) => {
       count: count,
       results: []
     }
-    client.query(`SELECT * FROM reviews WHERE product_id = ${id}`)
+
+    const query = `
+      SELECT *
+      FROM reviews
+      JOIN photos
+      ON reviews.id = photos.review_id
+      WHERE product_id = ${id}
+      ORDER BY ${sort}
+      LIMIT ${count}
+      OFFSET ${page}
+    `
+    client.query(query)
       .then(result => {
         release();
         result.rows.forEach(row => {
@@ -24,11 +35,17 @@ module.exports = (id, page, count, sort, callback) => {
             response: row.response,
             body: row.body,
             reviewer_name: row.reviewer_name,
-            helpfulness: row.helpfulness
+            helpfulness: row.helpfulness,
+            photos: []
           };
           obj.date = new Date(Number(row.date)).toISOString();
           data.results.push(obj);
-        })
+          let photo = {
+            id: row.review_id,
+            url: row.url
+          }
+          obj.photos.push(photo);
+        });
         callback(data)
       })
   })
