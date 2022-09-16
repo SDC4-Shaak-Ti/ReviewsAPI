@@ -1,9 +1,8 @@
 const models = require('../models');
 
 module.exports = (req, res) => {
-  const productId = req.params.product_id;
-  models.getReviewMeta(productId)
-    .then((data) => {
-      res.send(data);
-    })
+  const productId = req.params['0'];
+  models.getReviewMeta(productId, (data) => {
+    res.send(data);
+  })
 }
