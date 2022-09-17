@@ -1,7 +1,4 @@
-// CREATE DATABASE reviews;
-
-// \c reviews;
-
+// TABLE-CREATION
 // CREATE TABLE Reviews(
 //   id SERIAL PRIMARY KEY,
 //   product_id integer NOT NULL,
@@ -33,6 +30,15 @@
 //   value integer NOT NULL
 // );
 
+// INDEX-CREATION:
+// CREATE INDEX reviews_product_id_idx
+// ON reviews (product_id);
+// CREATE INDEX photos_review_id_idx
+// ON photos (review_id);
+// CREATE INDEX characteristics_product_id_idx
+// ON characteristics (product_id);
+// CREATE INDEX characteristic_reviews_charactereistic_id_idx
+// ON characteristic_reviews (characteristic_id);
 
 // \COPY photos FROM '/Users/danielshin/Desktop/Hack Reactor/SDC/ReviewsAPI/etl/reviews_photos.csv' DELIMITER ',' CSV HEADER;
 // \COPY characteristics FROM '/Users/danielshin/Desktop/Hack Reactor/SDC/ReviewsAPI/etl/characteristics.csv' DELIMITER ',' CSV HEADER;
