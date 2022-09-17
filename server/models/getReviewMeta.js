@@ -11,8 +11,7 @@ module.exports = (id, callback) => {
       recommended: {
         false: 0,
         true: 0
-      },
-      characteristics: {}
+      }
     }
     var query = `SELECT rating, recommend FROM reviews WHERE product_id = ${id}`
     client.query(query)
@@ -33,10 +32,34 @@ module.exports = (id, callback) => {
         })
       })
       .then(() => {
-        client.query(`SELECT * FROM characteristics WHERE product_id = ${id}`)
-        .then(result => {
-          release();
-          callback(data);
+        var query = `
+          SELECT *
+          FROM characteristics
+          JOIN characteristic_reviews
+          ON characteristics.id = characteristic_reviews.characteristic_id
+          WHERE product_id = ${id}
+        `
+        client.query(query)
+          .then(result => {
+            var obj = {};
+            result.rows.forEach(row => {
+              if (obj[row.name]) {
+                obj[row.name].value += row.value
+                obj[row.name].counter++;
+              } else {
+                obj[row.name] = {
+                  id: row.characteristic_id,
+                  value: 0,
+                  counter: 0
+                }
+              }
+            })
+            for (var key in obj) {
+              obj[key].value = (obj[key].value/obj[key].counter).toString();
+              delete obj[key].counter;
+            }
+            data.characteristics = obj;
+            callback(data)
           })
       })
       .catch(err => {
