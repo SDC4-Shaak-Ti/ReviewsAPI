@@ -7,7 +7,7 @@ module.exports = (id, callback) => {
       SET reported = true
       WHERE id = ${id}
     `
-    pool.query(query)
+    client.query(query)
       .then(result => {
         callback(true);
       })
