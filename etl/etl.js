@@ -17,7 +17,7 @@ async function fillChar() {
     const parser = fs.createReadStream("./characteristics.csv").pipe(parse({
       skip_records_with_error: true,
       columns: true,
-      to_line: 5
+      // to_line: 5
     }));
 
 
@@ -37,7 +37,7 @@ async function fillChar() {
 
   })()
 }
-fillChar();
+// fillChar();
 
 async function fillCharReviews() {
 
@@ -52,7 +52,7 @@ async function fillCharReviews() {
     const parser = fs.createReadStream(path.join(__dirname + "/characteristic_reviews.csv")).pipe(parse({
       skip_records_with_error: true,
       columns: true,
-      to_line: 5
+      // to_line: 5
     }));
 
 
@@ -74,7 +74,7 @@ async function fillCharReviews() {
 
   })()
 }
-fillCharReviews();
+// fillCharReviews();
 
 async function fillReviews() {
 
@@ -89,7 +89,7 @@ async function fillReviews() {
     const parser = fs.createReadStream(path.join(__dirname + "/reviews.csv")).pipe(parse({
       skip_records_with_error: true,
       columns: true,
-      to_line: 5
+      // to_line: 5
     }));
 
 
@@ -131,7 +131,7 @@ async function fillReviews() {
   })()
 }
 
-fillReviews();
+// fillReviews();
 
 async function fillPhotos() {
 
@@ -146,7 +146,7 @@ async function fillPhotos() {
     const parser = fs.createReadStream(path.join(__dirname + "/reviews_photos.csv")).pipe(parse({
       skip_records_with_error: true,
       columns: true,
-      to_line: 5
+      // to_line: 5
     }));
 
 
@@ -168,4 +168,4 @@ async function fillPhotos() {
   })()
 }
 
-fillPhotos();
+// fillPhotos();
