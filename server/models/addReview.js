@@ -34,34 +34,35 @@ module.exports = async (productId, data, callback) => {
     0
   ]
   const reviewResult = await client.query(reviewQuery, reviewValues)
-  data.photos.forEach(async (photo) => {
-    var photoQuery = `
-      INSERT INTO photos (
-        review_id,
-        url
-      )
-      VALUES ((SELECT id FROM reviews ORDER BY id DESC LIMIT 1), $1)
-    `
-    const photoValues = [
-      photo
-    ]
-    await client.query(photoQuery, photoValues)
-  })
-  console.log(data)
-  for (var key in data.characteristics) {
-    var charQuery = `
-      INSERT INTO char_reviews (
-        review_id,
-        characteristic_id,
-        value
-      )
-      VALUES ((SELECT id FROM reviews ORDER BY id DESC LIMIT 1), $1, $2)
-    `
-    var charValues = [
-      key,
-      data.characteristics[key]
-    ]
-    await client.query(charQuery, charValues)
+  if (reviewResult.rowCount === 1) {
+    data.photos.forEach(async (photo) => {
+      var photoQuery = `
+        INSERT INTO photos (
+          review_id,
+          url
+        )
+        VALUES ((SELECT id FROM reviews ORDER BY id DESC LIMIT 1), $1)
+      `
+      const photoValues = [
+        photo
+      ]
+      await client.query(photoQuery, photoValues)
+    })
+    for (var key in data.characteristics) {
+      var charQuery = `
+        INSERT INTO char_reviews (
+          review_id,
+          characteristic_id,
+          value
+        )
+        VALUES ((SELECT id FROM reviews ORDER BY id DESC LIMIT 1), $1, $2)
+      `
+      var charValues = [
+        key,
+        data.characteristics[key]
+      ]
+      await client.query(charQuery, charValues)
+    }
   }
   callback(reviewResult)
 }
